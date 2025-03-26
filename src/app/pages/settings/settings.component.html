@@ -1,0 +1,59 @@
+<mat-card class="settings-container">
+    <mat-card-header>
+      <mat-card-title>Configuraciones del Medidor de Ángulos</mat-card-title>
+      <mat-card-subtitle>Personaliza tu experiencia de medición</mat-card-subtitle>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()" class="settings-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Unidad de Ángulo</mat-label>
+            <mat-select formControlName="angleUnit">
+              <mat-option *ngFor="let unit of angleUnits" [value]="unit">
+                {{ unit }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Precisión de Medición</mat-label>
+            <mat-select formControlName="precision">
+              <mat-option *ngFor="let precision of precisionOptions" [value]="precision">
+                {{ precision }} decimal{{ precision > 1 ? 'es' : '' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Offset de Calibración</mat-label>
+            <input 
+              matInput 
+              type="number" 
+              formControlName="calibrationOffset" 
+              placeholder="Ajuste de calibración"
+            >
+            <mat-hint>Rango: -10 a 10</mat-hint>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+  
+    <mat-card-actions>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="saveSettings()"
+        [disabled]="settingsForm.invalid">
+        Guardar Configuraciones
+      </button>
+      <button 
+        mat-stroked-button 
+        color="warn" 
+        (click)="resetToDefaults()">
+        Restaurar Valores Predeterminados
+      </button>
+    </mat-card-actions>
+  </mat-card>

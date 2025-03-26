@@ -1,0 +1,30 @@
+<mat-card class="angle-display-card">
+    <mat-card-header>
+      <mat-card-title>Medición de Ángulo</mat-card-title>
+      <mat-card-subtitle>Detalles de Ángulo Actual</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="angle-info">
+        <div class="angle-value">
+          <h2>{{ displayAngle }}°</h2>
+          <p class="angle-category">{{ angleCategory }}</p>
+        </div>
+        
+        <mat-progress-bar 
+          mode="determinate" 
+          [value]="angleProgress"
+          color="primary">
+        </mat-progress-bar>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions>
+      <button mat-raised-button color="primary">
+        Guardar Medición
+      </button>
+      <button mat-stroked-button color="accent">
+        Reiniciar
+      </button>
+    </mat-card-actions>
+  </mat-card>

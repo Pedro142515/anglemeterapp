@@ -1,0 +1,195 @@
+@use 'sass:color';
+@use '@angular/material' as mat;
+
+// Color variables defined using the color module functions
+$primary-color: #3f51b5;
+$primary-color-light: color.scale(#3f51b5, $lightness: 10%);
+$accent-color: #ff4081;
+$warn-color: #f44336;
+$background-color: #f5f5f5;
+$text-color: #333;
+
+.settings-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  // Hover effect for the entire card
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+
+  // Card header styles
+  mat-card-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+
+    mat-card-title {
+      color: $primary-color;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    mat-card-subtitle {
+      color: rgba($text-color, 0.7);
+    }
+  }
+
+  .settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .form-row {
+      display: flex;
+      gap: 1.5rem;
+      
+      mat-form-field {
+        flex: 1;
+        
+        // Enhanced form field appearance
+        &.mat-form-field-appearance-outline {
+          .mat-form-field-outline {
+            color: rgba($primary-color, 0.5);
+          }
+
+          &.mat-focused {
+            .mat-form-field-outline-thick {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+
+    // Input and select styles
+    mat-select, input {
+      font-size: 1rem;
+      color: $text-color;
+    }
+
+    mat-hint {
+      color: rgba($text-color, 0.6);
+      font-size: 0.8rem;
+    }
+  }
+
+  // Action buttons container
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    button {
+      min-width: 200px;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+
+      // Hover and active states
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      // Color variations
+      &.mat-raised-button {
+        &.mat-primary {
+          background-color: $primary-color;
+          color: white;
+        }
+
+        &.mat-warn {
+          background-color: $warn-color;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .settings-container {
+    margin: 1rem;
+    padding: 1rem;
+
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+
+      mat-form-field {
+        width: 100%;
+      }
+    }
+
+    mat-card-actions {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      button {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem;
+      }
+    }
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .settings-container {
+    background-color: #2c2c2c;
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+
+    mat-card-header {
+      mat-card-title {
+        color: $primary-color-light;
+      }
+
+      mat-card-subtitle {
+        color: rgba(white, 0.7);
+      }
+    }
+
+    .settings-form {
+      mat-form-field {
+        color: white;
+      }
+
+      mat-hint {
+        color: rgba(white, 0.6);
+      }
+    }
+  }
+}
+
+// Accessibility and focus states
+button:focus-visible,
+mat-form-field:focus-within {
+  outline: 3px solid rgba(63, 81, 181, 0.5);
+  outline-offset: 2px;
+}

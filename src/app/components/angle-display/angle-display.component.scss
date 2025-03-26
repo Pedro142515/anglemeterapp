@@ -1,0 +1,204 @@
+@use 'sass:color';
+@use '@angular/material' as mat;
+
+// Color variables
+$primary-color: #3f51b5;
+$primary-color-light: color.scale(#3f51b5, $lightness: 10%);
+$accent-color: #ff4081;
+$text-color: #333;
+$background-color: #f5f5f5;
+
+.angle-display-card {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  // Hover effect for the entire card
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+
+  // Card header styles
+  mat-card-header {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: rgba($primary-color, 0.05);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+    mat-card-title {
+      color: $primary-color;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    mat-card-subtitle {
+      color: rgba($text-color, 0.7);
+    }
+  }
+
+  .angle-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .angle-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: $primary-color;
+      margin: 0;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .angle-category {
+      color: rgba($text-color, 0.7);
+      margin: 0.5rem 0;
+      font-style: italic;
+      font-size: 1rem;
+      text-transform: capitalize;
+    }
+  }
+
+  mat-progress-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 1rem;
+
+    // Custom progress bar styling
+    .mat-progress-bar-fill {
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    button {
+      min-width: 180px;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+
+      // Hover and active states
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      // Color variations
+      &.mat-raised-button {
+        &.mat-primary {
+          background-color: $primary-color;
+          color: white;
+        }
+
+        &.mat-accent {
+          background-color: $accent-color;
+          color: white;
+        }
+      }
+
+      &.mat-stroked-button {
+        &.mat-accent {
+          border-color: $accent-color;
+          color: $accent-color;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .angle-display-card {
+    margin: 1rem;
+    
+    .angle-value {
+      h2 {
+        font-size: 2.5rem;
+      }
+    }
+
+    mat-card-actions {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      button {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem;
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .angle-display-card {
+    background-color: #2c2c2c;
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+
+    mat-card-header {
+      background-color: rgba($primary-color-light, 0.1);
+
+      mat-card-title {
+        color: $primary-color-light;
+      }
+
+      mat-card-subtitle {
+        color: rgba(white, 0.7);
+      }
+    }
+
+    .angle-value {
+      h2 {
+        color: $primary-color-light;
+      }
+
+      .angle-category {
+        color: rgba(white, 0.7);
+      }
+    }
+  }
+}
+
+// Accessibility and focus states
+button:focus-visible {
+  outline: 3px solid rgba(63, 81, 181, 0.5);
+  outline-offset: 2px;
+}

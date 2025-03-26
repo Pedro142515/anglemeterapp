@@ -1,0 +1,38 @@
+<mat-card class="angle-meter-container">
+    <mat-card-header>
+      <mat-card-title>Medidor de Ángulos</mat-card-title>
+      <mat-card-subtitle>Medición en Tiempo Real</mat-card-subtitle>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <div class="measurement-controls">
+        <div class="button-group">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="startMeasurement()"
+            [disabled]="isTracking">
+            Iniciar Medición
+          </button>
+          <button 
+            mat-raised-button 
+            color="warn" 
+            (click)="stopMeasurement()"
+            [disabled]="!isTracking">
+            Detener Medición
+          </button>
+          <button 
+            mat-stroked-button 
+            color="accent" 
+            (click)="resetMeasurement()">
+            Reiniciar
+          </button>
+        </div>
+  
+        <app-angle-display 
+          [angle]="currentAngle"
+          [unit]="'degrees'">
+        </app-angle-display>
+      </div>
+    </mat-card-content>
+  </mat-card>
