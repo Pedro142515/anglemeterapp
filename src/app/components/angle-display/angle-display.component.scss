@@ -1,47 +1,81 @@
+@use 'sass:map';
 @use 'sass:color';
 @use '@angular/material' as mat;
 
-// Color variables
-$primary-color: #3f51b5;
-$primary-color-light: color.scale(#3f51b5, $lightness: 10%);
-$accent-color: #ff4081;
-$text-color: #333;
-$background-color: #f5f5f5;
+// Enhanced color palette with more nuanced colors
+$color-palette: (
+  primary: #3f51b5,
+  primary-light: color.scale(#3f51b5, $lightness: 10%),
+  accent: #ff4081,
+  text-dark: #333,
+  text-light: #ffffff,
+  background-light: #f5f5f5,
+  background-dark: #2c2c2c,
+  shadow-color: rgba(0, 0, 0, 0.1)
+);
+
+// Define base font size
+$base-font-size: 16px;
+
+// Responsive typography mixin
+@mixin responsive-typography($base-size: $base-font-size) {
+  @media (max-width: 600px) {
+    font-size: calc(#{$base-size} * 0.9);
+  }
+}
+
+// Elevation mixin for consistent shadows
+@mixin elevation($level: 1) {
+  $shadows: (
+    1: 0 2px 4px rgba(0, 0, 0, 0.1),
+    2: 0 4px 8px rgba(0, 0, 0, 0.12),
+    3: 0 8px 16px rgba(0, 0, 0, 0.15)
+  );
+  box-shadow: map.get($shadows, $level);
+}
+
+// Transition mixin
+@mixin smooth-transition($properties...) {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 .angle-display-card {
   max-width: 500px;
+  width: 90%;
   margin: 2rem auto;
   text-align: center;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  background-color: map.get($color-palette, text-light);
+  border-radius: 16px;
+  @include elevation(2);
+  @include smooth-transition(box-shadow, transform);
 
-  // Hover effect for the entire card
+  // Improved hover state
   &:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(-5px);
+    @include elevation(3);
+    transform: translateY(-8px);
   }
 
-  // Card header styles
+  // Card header with modern design
   mat-card-header {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: rgba($primary-color, 0.05);
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    padding: 1.5rem 1rem;
+    background-color: rgba(map.get($color-palette, primary), 0.05);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
 
     mat-card-title {
-      color: $primary-color;
-      font-weight: 600;
-      font-size: 1.25rem;
+      color: map.get($color-palette, primary);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
     }
 
     mat-card-subtitle {
-      color: rgba($text-color, 0.7);
+      color: rgba(map.get($color-palette, text-dark), 0.6);
+      font-weight: 500;
     }
   }
 
+  // Angle information section
   .angle-info {
     display: flex;
     flex-direction: column;
@@ -50,155 +84,143 @@ $background-color: #f5f5f5;
     padding: 1.5rem;
   }
 
+  // Angle value styling
   .angle-value {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
 
     h2 {
-      font-size: 3rem;
-      font-weight: 700;
-      color: $primary-color;
+      font-size: 4rem;
+      font-weight: 800;
+      color: map.get($color-palette, primary);
       margin: 0;
-      letter-spacing: -1px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      letter-spacing: -2px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      @include responsive-typography;
     }
 
     .angle-category {
-      color: rgba($text-color, 0.7);
-      margin: 0.5rem 0;
+      color: rgba(map.get($color-palette, text-dark), 0.7);
       font-style: italic;
-      font-size: 1rem;
+      font-size: 1.125rem;
       text-transform: capitalize;
+      font-weight: 500;
     }
   }
 
+  // Progress bar with smooth animation
   mat-progress-bar {
     width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    margin-top: 1rem;
+    height: 10px;
+    border-radius: 5px;
+    margin-top: 1.5rem;
+    overflow: hidden;
 
-    // Custom progress bar styling
     .mat-progress-bar-fill {
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 
+  // Action buttons with enhanced interactivity
   mat-card-actions {
     display: flex;
     justify-content: center;
     gap: 1rem;
     padding: 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 
     button {
-      min-width: 180px;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
+      min-width: 200px;
+      padding: 0.875rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
+      letter-spacing: 0.75px;
+      @include smooth-transition(transform, box-shadow);
 
-      // Hover and active states
       &:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        @include elevation(2);
       }
 
       &:active {
         transform: scale(0.95);
       }
 
-      &:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-      }
-
-      // Color variations
       &.mat-raised-button {
         &.mat-primary {
-          background-color: $primary-color;
-          color: white;
+          background-color: map.get($color-palette, primary);
+          color: map.get($color-palette, text-light);
         }
 
         &.mat-accent {
-          background-color: $accent-color;
-          color: white;
+          background-color: map.get($color-palette, accent);
+          color: map.get($color-palette, text-light);
         }
       }
 
       &.mat-stroked-button {
         &.mat-accent {
-          border-color: $accent-color;
-          color: $accent-color;
+          border-color: map.get($color-palette, accent);
+          color: map.get($color-palette, accent);
         }
       }
     }
   }
-}
 
-// Responsive adjustments
-@media (max-width: 600px) {
-  .angle-display-card {
+  // Responsive adjustments
+  @media (max-width: 600px) {
     margin: 1rem;
     
-    .angle-value {
-      h2 {
-        font-size: 2.5rem;
-      }
+    .angle-value h2 {
+      font-size: 3rem;
     }
 
     mat-card-actions {
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
 
       button {
         width: 100%;
         min-width: auto;
-        padding: 0.75rem;
       }
     }
   }
-}
 
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .angle-display-card {
-    background-color: #2c2c2c;
-    color: white;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  // Dark mode enhancements
+  @media (prefers-color-scheme: dark) {
+    background-color: map.get($color-palette, background-dark);
+    color: map.get($color-palette, text-light);
+    @include elevation(3);
 
     mat-card-header {
-      background-color: rgba($primary-color-light, 0.1);
-
+      background-color: rgba(map.get($color-palette, primary-light), 0.1);
+      
       mat-card-title {
-        color: $primary-color-light;
+        color: map.get($color-palette, primary-light);
       }
 
       mat-card-subtitle {
-        color: rgba(white, 0.7);
+        color: rgba(map.get($color-palette, text-light), 0.7);
       }
     }
 
     .angle-value {
       h2 {
-        color: $primary-color-light;
+        color: map.get($color-palette, primary-light);
       }
 
       .angle-category {
-        color: rgba(white, 0.7);
+        color: rgba(map.get($color-palette, text-light), 0.7);
       }
     }
   }
-}
 
-// Accessibility and focus states
-button:focus-visible {
-  outline: 3px solid rgba(63, 81, 181, 0.5);
-  outline-offset: 2px;
+  // Improved accessibility
+  button:focus-visible {
+    outline: 3px solid rgba(63, 81, 181, 0.6);
+    outline-offset: 3px;
+  }
 }

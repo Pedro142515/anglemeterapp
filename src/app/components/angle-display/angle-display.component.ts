@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import * as mathjs from 'mathjs';
   templateUrl: './angle-display.component.html',
   styleUrl: './angle-display.component.scss'
 })
-export class AngleDisplayComponent implements OnInit {
+export class AngleDisplayComponent implements OnInit, OnChanges {
   @Input() angle: number = 0;
   @Input() unit: 'degrees' | 'radians' = 'degrees';
 
@@ -25,14 +25,21 @@ export class AngleDisplayComponent implements OnInit {
     this.calculateAngleDetails();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // This method will be called whenever the input angle changes
+    if (changes['angle']) {
+      this.calculateAngleDetails();
+    }
+  }
+
   calculateAngleDetails(): void {
+    // Convert angle to degrees if in radians
     this.displayAngle =
       this.unit === 'radians'
         ? Number(mathjs.format(mathjs.multiply(this.angle, 180 / Math.PI), { precision: 2 }))
         : Number(mathjs.format(this.angle, { precision: 2 }));
 
-
-    // Categorizar el ángulo
+    // Categorize the angle
     if (this.displayAngle >= 0 && this.displayAngle < 90) {
       this.angleCategory = 'Agudo';
       this.angleProgress = this.displayAngle;

@@ -7,6 +7,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngleDisplayComponent } from '../../components/angle-display/angle-display.component';
 import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
+
 @Component({
   selector: 'app-angle-meter',
   standalone: true,
@@ -23,9 +24,11 @@ import { Device } from '@capacitor/device';
 export class AngleMeterComponent implements OnInit, OnDestroy {
   currentAngle: number = 0;
   isTracking: boolean = false;
-  orientationInterval: any;
+  private orientationHandler: (event: DeviceOrientationEvent) => void;
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar) {
+    this.orientationHandler = this.handleOrientation.bind(this);
+  }
 
   ngOnInit(): void {
     this.checkDeviceSupport();
@@ -33,11 +36,10 @@ export class AngleMeterComponent implements OnInit, OnDestroy {
 
   async checkDeviceSupport(): Promise<void> {
     try {
-      // Verificar si el plugin está disponible en la plataforma actual
       if (Capacitor.isPluginAvailable('Device')) {
         const deviceInfo = await Device.getInfo();
         const platform = deviceInfo.platform;
-
+        
         if (platform === 'android' || platform === 'ios') {
           this.showNotification(`Dispositivo compatible: ${platform}`);
         } else {
@@ -54,31 +56,55 @@ export class AngleMeterComponent implements OnInit, OnDestroy {
 
   startMeasurement(): void {
     if (!this.isTracking) {
-      this.isTracking = true;
-      this.startOrientationTracking();
-      this.showNotification('Medición de ángulo iniciada');
+      // Check if requestPermission method exists on window object
+      const deviceOrientation = window as any;
+      
+      if (deviceOrientation.DeviceOrientationEvent && 
+          typeof deviceOrientation.DeviceOrientationEvent.requestPermission === 'function') {
+        deviceOrientation.DeviceOrientationEvent.requestPermission()
+          .then((response: string) => {
+            if (response === 'granted') {
+              this.startOrientationTracking();
+            } else {
+              this.showNotification('Permiso de orientación denegado');
+            }
+          })
+          .catch(console.error);
+      } else {
+        // For browsers without explicit permission method
+        this.startOrientationTracking();
+      }
     }
+  }
+
+  startOrientationTracking(): void {
+    this.isTracking = true;
+    window.addEventListener('deviceorientation', this.orientationHandler);
+    this.showNotification('Medición de ángulo iniciada');
+  }
+
+  handleOrientation(event: DeviceOrientationEvent): void {
+    // Use beta for vertical tilt (pitch)
+    // Beta ranges from -180 to 180 degrees
+    // Normalize to 0-360 range and handle negative values
+    let angle = event.beta || 0;
+    
+    // Normalize angle to ensure it's always between 0 and 360
+    angle = angle >= 0 ? angle : 360 + angle;
+    
+    this.currentAngle = angle;
   }
 
   stopMeasurement(): void {
     if (this.isTracking) {
-      this.isTracking = false;
       this.stopOrientationTracking();
       this.showNotification('Medición de ángulo detenida');
     }
   }
 
-  startOrientationTracking(): void {
-    this.orientationInterval = setInterval(() => {
-      // Simulated angle tracking (reemplazar con lógica real de sensores)
-      this.currentAngle = Math.random() * 180;
-    }, 500);
-  }
-
   stopOrientationTracking(): void {
-    if (this.orientationInterval) {
-      clearInterval(this.orientationInterval);
-    }
+    this.isTracking = false;
+    window.removeEventListener('deviceorientation', this.orientationHandler);
   }
 
   resetMeasurement(): void {
